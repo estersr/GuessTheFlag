@@ -7,6 +7,32 @@
 
 import SwiftUI
 
+// ViewModifier personalizado
+struct ProminentTitle: ViewModifier {
+    func body(content: Content) -> some View {
+        content
+            .font(.largeTitle.bold())
+            .foregroundColor(.white)
+    }
+}
+
+// Extensão de View para aplicar o modificador
+extension View {
+    func prominentTitle() -> some View {
+        self.modifier(ProminentTitle())
+    }
+}
+
+struct FlagImage: View {
+    var imageName: String
+    
+    var body: some View {
+        Image(imageName)
+            .clipShape(Capsule())
+            .shadow(radius: 5)
+    }
+}
+
 struct ContentView: View {
     @State private var countries = ["Estonia", "France", "Germany", "Ireland", "Italy", "Nigeria", "Poland", "Spain", "UK", "Ukraine", "US"].shuffled()
     @State private var correctAnswer = Int.random(in: 0...2)
@@ -29,8 +55,7 @@ struct ContentView: View {
             VStack {
                 Spacer()
                 Text("Guess The Flag")
-                    .font(.largeTitle.bold())
-                    .foregroundStyle(.white)
+                    .prominentTitle()
                 VStack(spacing: 15) {
                     VStack {
                         Text("Tap the flag of")
@@ -43,16 +68,14 @@ struct ContentView: View {
                         Button {
                             flagTapped(number)
                         } label: {
-                            Image(countries[number])
-                                .clipShape(.capsule)
-                                .shadow(radius: 5)
+                            FlagImage(imageName: countries[number])
                         }
                     }
                 }
                 .frame(maxWidth: .infinity)
                 .padding(.vertical, 20)
                 .background(.regularMaterial)
-                .clipShape(.rect(cornerRadius: 20))
+                .clipShape(RoundedRectangle(cornerRadius: 20))
                 Spacer()
                 Spacer()
                 
